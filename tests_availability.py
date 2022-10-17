@@ -2,9 +2,9 @@ import datetime
 from unittest.mock import Mock, patch
 from zoneinfo import ZoneInfo
 
-from django.test import TestCase
+from unittest import TestCase
 
-from .availability import Availability, AvailabilityRange
+from availability import Availability, AvailabilityRange
 
 tz_name = "America/Chicago"
 tz = ZoneInfo(tz_name)
