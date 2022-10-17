@@ -11,3 +11,5 @@ AvailabilityRange(start_time=datetime.datetime(2022,11,1), end_time=datetime.dat
 
 availability -= AvailabilityRange(start_time=datetime.datetime(2022,11,8), end_time=datetime.datetime(2022,11,10))
 ```
+
+`pip install availibility`
