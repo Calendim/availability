@@ -13,3 +13,10 @@ availability -= AvailabilityRange(start_time=datetime.datetime(2022,11,8), end_t
 ```
 
 `pip install availibility`
+
+
+# Weird Behaviors
+
+### Jumping forward with DST
+
+When working with availability ranges that exist in a jump, they will be converted to the "jumped time".  So 2:30 would become 3:30 since there isn't technically a 2:30 on that day.
