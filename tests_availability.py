@@ -1,8 +1,7 @@
 import datetime
+from unittest import TestCase
 from unittest.mock import Mock, patch
 from zoneinfo import ZoneInfo
-
-from unittest import TestCase
 
 from availability import Availability, AvailabilityRange
 
@@ -254,6 +253,43 @@ class AvailabilityTests(TestCase):
                     AvailabilityRange(
                         short_dt(9, 45),
                         short_dt(10),
+                    ),
+                ]
+            ),
+        )
+
+    def test_subtract_availabilities_at_dst_start(self):
+        availability = Availability(
+            [
+                AvailabilityRange(
+                    short_dt(1, 0, 2021, 3, 14),
+                    short_dt(4, 0, 2021, 3, 14),
+                ),
+            ]
+        )
+        # this is also known as 3-3:30 since 2-2:30 doesn't actually exist becaues the clock moves forward
+        availability2 = Availability(
+            [
+                AvailabilityRange(
+                    short_dt(2, 0, 2021, 3, 14),
+                    short_dt(2, 30, 2021, 3, 14),
+                ),
+            ]
+        )
+
+        availability3 = availability - availability2
+
+        self.assertEqual(
+            availability3,
+            Availability(
+                [
+                    AvailabilityRange(
+                        short_dt(1, 0, 2021, 3, 14),
+                        short_dt(3, 0, 2021, 3, 14),
+                    ),
+                    AvailabilityRange(
+                        short_dt(3, 30, 2021, 3, 14),
+                        short_dt(4, 0, 2021, 3, 14),
                     ),
                 ]
             ),

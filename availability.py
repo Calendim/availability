@@ -2,7 +2,9 @@ import datetime
 import logging
 from copy import deepcopy
 from typing import Optional
+from zoneinfo import ZoneInfo
 
+tz_utc = ZoneInfo("UTC")
 logger = logging.getLogger(__name__)
 
 
@@ -111,14 +113,14 @@ class Availability:
         for time_range in ranges:
             for other_ar in other.ranges:
                 if other_ar.start_time <= time_range.start_time <= other_ar.end_time:
-                    time_range.start_time = other_ar.end_time + datetime.timedelta(
-                        minutes=other.padding_time_after
+                    time_range.start_time = pad_time(
+                        other_ar.end_time, other.padding_time_after
                     )
 
                 # the end time is in the window
                 if other_ar.start_time <= time_range.end_time <= other_ar.end_time:
-                    time_range.end_time = other_ar.start_time - datetime.timedelta(
-                        minutes=other.padding_time_before
+                    time_range.end_time = pad_time(
+                        other_ar.start_time, -1 * other.padding_time_before
                     )
 
                 # if the other_ar starts after the window start and before the window ends
@@ -136,14 +138,13 @@ class Availability:
 
                         ranges.append(
                             AvailabilityRange(
-                                other_ar.end_time
-                                + datetime.timedelta(minutes=other.padding_time_after),
+                                pad_time(other_ar.end_time, other.padding_time_after),
                                 time_range.end_time,
                             )
                         )
 
-                        time_range.end_time = other_ar.start_time - datetime.timedelta(
-                            minutes=other.padding_time_before
+                        time_range.end_time = pad_time(
+                            other_ar.start_time, -1 * other.padding_time_before
                         )
 
             if time_range.end_time <= time_range.start_time:
@@ -191,3 +192,11 @@ class Availability:
     def append(self, ar: AvailabilityRange) -> None:
         self.ranges.append(ar)
         self.sort()
+
+    def __str__(self):
+        return "\n".join([str(x) for x in self.ranges])
+
+
+def pad_time(dt: datetime.datetime, padding: int):
+    tz = dt.tzinfo
+    return (dt.astimezone(tz_utc) + datetime.timedelta(minutes=padding)).astimezone(tz)

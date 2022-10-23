@@ -4,13 +4,13 @@ build-backend = "hatchling.build"
 
 [project]
 name = "availability"
-version = "0.0.2"
+version = "0.0.3"
 authors = [
   { name="Paul Stenius", email="stenius@gmail.com" },
 ]
 description = "A custom python type for working with sparse ranges of padded timedate intervals"
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.9"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
